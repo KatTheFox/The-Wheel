@@ -1,0 +1,6 @@
+/home/katrina/.config/unity3d/Weather Factory/Cultist Simulator/mods/The Wheel/dll/TheWheel.dll
+/home/katrina/.config/unity3d/Weather Factory/Cultist Simulator/mods/The Wheel/dll/TheWheel.pdb
+/home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.csproj.AssemblyReference.cache
+/home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.csproj.CoreCompileInputs.cache
+/home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.dll
+/home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.pdb

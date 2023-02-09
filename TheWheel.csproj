@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{E10DB26C-046D-4794-8AB0-AA55ABE4381E}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>TheWheel</RootNamespace>
+        <AssemblyName>TheWheel</AssemblyName>
+        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>..\..\.config\unity3d\Weather Factory\Cultist Simulator\mods\The Wheel\dll\</OutputPath>
+    <BaseOutputPath>\home\katrina\.config\unity3d\Weather Factory\Cultist Simulator\mods\The Wheel\dll</BaseOutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="0Harmony">
+          <HintPath>..\..\steam\steamapps\workshop\content\718670\2820486455\dll\0Harmony.dll</HintPath><Private>false</Private>
+        </Reference>
+        <Reference Include="Assembly-CSharp">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\Assembly-CSharp.dll</HintPath><Private>false</Private>
+        </Reference>
+        <Reference Include="SecretHistories.Constants">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Constants.dll</HintPath><Private>false</Private>
+        </Reference>
+        <Reference Include="SecretHistories.Enums">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Enums.dll</HintPath><Private>false</Private>
+        </Reference>
+        <Reference Include="SecretHistories.Interfaces">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Interfaces.dll</HintPath><Private>false</Private>
+        </Reference>
+        <Reference Include="SecretHistories.Main">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Main.dll</HintPath><Private>false</Private>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+        <Reference Include="UnityEngine">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\UnityEngine.dll</HintPath><Private>false</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\UnityEngine.CoreModule.dll</HintPath><Private>false</Private>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="SettingTracker.cs" />
+        <Compile Include="TheWheel.cs" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>
