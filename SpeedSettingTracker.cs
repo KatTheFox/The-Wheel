@@ -1,9 +1,7 @@
-using System;
-using SecretHistories.Entities;
 using SecretHistories.Fucine;
 using UnityEngine;
 
-    public class SettingTracker: ISettingSubscriber    {
+    public class SpeedSettingTracker: ISettingSubscriber    {
         private static float[] factorMap = new float[9]
         {
             0.2f,
@@ -22,8 +20,8 @@ using UnityEngine;
             if (!(newValue is int num1))
                 num1 = 1;
             int num2 = num1;
-            int index = Mathf.Min(SettingTracker.factorMap.Length - 1, Mathf.Max(num2, 0));
-            TheWheel.speedStep = SettingTracker.factorMap[index] * 0.05f;
+            int index = Mathf.Min(SpeedSettingTracker.factorMap.Length - 1, Mathf.Max(num2, 0));
+            TheWheel.speedStep = SpeedSettingTracker.factorMap[index];
         }
 
         public void BeforeSettingUpdated(object newValue)

@@ -4,3 +4,4 @@
 /home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.csproj.CoreCompileInputs.cache
 /home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.dll
 /home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.pdb
+/home/katrina/The Wheel/TheWheel/obj/Release/TheWheel.csproj.CopyComplete

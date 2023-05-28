@@ -1,42 +1,105 @@
-
-using SecretHistories;
 using SecretHistories.Entities;
 using SecretHistories.Enums;
 using SecretHistories.Fucine;
 using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using System.Reflection;
 using SecretHistories.UI;
 using HarmonyLib;
 using SecretHistories.Constants;
-using SecretHistories.Infrastructure.Modding;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class TheWheel:MonoBehaviour
+public class TheWheel: MonoBehaviour
 {
     public static float speedStep = 0.15f;
-    public static SettingTracker tracker;
+    public static string KB1Str= "P";
+    public static string KB10Str= "Z";
+    public static string KBNextVerb="Slash";
+    public static SpeedSettingTracker tracker;
+    public static KB1SettingTracker tracker1;
+    public static KB10SettingTracker tracker10;
+    public static KBNextVerbSettingTracker trackerNextVerb;
+    
     
     public void Start() => SceneManager.sceneLoaded += new UnityAction<Scene, LoadSceneMode>(AwakePrefix);
-
+    
     public void OnDestroy() => SceneManager.sceneLoaded -= new UnityAction<Scene, LoadSceneMode>(AwakePrefix);
 
+    public void Update()
+    {
+        
+        if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KB10Str)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
+        {
+            
+            
+            for (int index = 0; index < 10; ++index)
+                Watchman.Get<Heart>().Beat(1f, 0.0f);
+            
+        }
+        if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KBNextVerb)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
+        {
+                
+                
+                float timeToFF=GetNextVerbTime();
+                NoonUtility.LogWarning("TheWheel: Fast forwarding "+timeToFF+" seconds");
+                if (timeToFF >= 0.1f)
+                {
+                    Watchman.Get<Heart>().Beat(timeToFF - 0.1f, 0.0f);
+                    Watchman.Get<Heart>().Beat(0.2f,0.0f);
+                    
+                }
+
+        }
+        if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KB1Str)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
+        {
+            
+            
+                Watchman.Get<Heart>().Beat(1f, 0.0f);
+            
+        }
+    }
+
+    public static float GetNextVerbTime()
+    {
+        List<Situation> verbList=Watchman.Get<HornedAxe>().GetRegisteredSituations();
+        if (verbList.Count == 0)
+            return 0.0f;
+        float lowest=float.PositiveInfinity;
+        foreach (Situation verb in verbList)
+        {
+            if(verb.TimeRemaining<lowest && verb.TimeRemaining>=0.1f)
+                lowest = verb.TimeRemaining;
+            
+        };
+        if(float.IsPositiveInfinity(lowest))
+            return 0.0f;
+        NoonUtility.LogWarning("TheWheel: Next verb time is "+lowest+" seconds");
+        return lowest;
+    }
     public static void Initialise()
     {
-        try
-        {
-            Harmony harmony = new Harmony("katthefox.thewheel");
+        NoonUtility.Log("TheWheel: Initialising");
+        
+            Harmony harmony = new Harmony("katthefoxthewheel");
             new GameObject().AddComponent<TheWheel>();
+            try
+            {
+                harmony.Patch(
+                    original: GetMethodInvariant(typeof(Heart), "GetTimerMultiplierForSpeed"),
+                    prefix: new HarmonyMethod(GetMethodInvariant(typeof(TheWheel),
+                        (nameof(TheWheel.GetTimerMultiplierForSpeedPrefix)))));
+            }catch(Exception e)
+            {
+                NoonUtility.Log(e.ToString());
+                NoonUtility.LogException(e);
+            }
             
-            harmony.Patch(
-                original: GetMethodInvariant(typeof(Heart),"ProcessBeatCounter"),
-                prefix: new HarmonyMethod(GetMethodInvariant(typeof(TheWheel),(nameof(TheWheel.ProcessBeatCounterPrefix)))));
-        }
-        catch(Exception e)
-        {
-            NoonUtility.LogException(e);
-        }
+        
     }
     static MethodInfo GetMethodInvariant(Type definingClass, string name)
     {
@@ -59,40 +122,91 @@ public class TheWheel:MonoBehaviour
     }
     void AwakePrefix(Scene scene, LoadSceneMode mode)
     {
+        NoonUtility.LogWarning("wkeprefix loded");
         if (scene.name == "S3Menu")
         {
-            Setting entityById = Watchman.Get<Compendium>().GetEntityById<Setting>("SpeedMultiplier");
-            if (entityById == null)
+            try
             {
-                NoonUtility.LogWarning("Speed Multiplier Setting Missing");
+                Setting speedMultSetting = Watchman.Get<Compendium>().GetEntityById<Setting>("SpeedMultiplier");
+                if (speedMultSetting == null)
+                {
+                    NoonUtility.LogWarning("Speed Multiplier Setting Missing");
+                }
+                else
+                {
+                    speedMultSetting.AddSubscriber((ISettingSubscriber)(TheWheel.tracker = new SpeedSettingTracker()))
+                        ;
+                    TheWheel.tracker.WhenSettingUpdated(speedMultSetting.CurrentValue);
+                }
+
+                Setting kb1sec = Watchman.Get<Compendium>().GetEntityById<Setting>("ff1sec");
+                if (kb1sec == null)
+                {
+                    NoonUtility.LogWarning("one second keybind missing");
+                }
+                else
+                {
+                    kb1sec.AddSubscriber((ISettingSubscriber)(TheWheel.tracker1 = new KB1SettingTracker()))
+                        ;
+                    TheWheel.tracker1.WhenSettingUpdated(kb1sec.CurrentValue);
+                }
+
+                Setting kb10sec = Watchman.Get<Compendium>().GetEntityById<Setting>("ff10sec");
+                if (kb10sec == null)
+                {
+                    NoonUtility.LogWarning("ten second keybind missing");
+                }
+                else
+                {
+                    kb10sec.AddSubscriber((ISettingSubscriber)(TheWheel.tracker10 = new KB10SettingTracker()))
+                        ;
+                    TheWheel.tracker10.WhenSettingUpdated(kb10sec.CurrentValue);
+                }
+
+                Setting kbNextVerb = Watchman.Get<Compendium>().GetEntityById<Setting>("ffNextVerb");
+                if (kbNextVerb == null)
+                {
+                    NoonUtility.LogWarning("next verb keybind missing");
+                }
+                else
+                {
+                    kbNextVerb.AddSubscriber(trackerNextVerb = new KBNextVerbSettingTracker())
+                        ;
+                    trackerNextVerb.WhenSettingUpdated(kbNextVerb.CurrentValue);
+                }
             }
-            else
+            catch (Exception e)
             {
-                entityById.AddSubscriber((ISettingSubscriber)(TheWheel.tracker = new SettingTracker()))
-                    ;
-                TheWheel.tracker.WhenSettingUpdated(entityById.CurrentValue);
+                NoonUtility.LogException(e);
             }
         }
     }
 
-    static private bool ProcessBeatCounterPrefix(Heart __instance, ref float ___timerBetweenBeats,
-        ref GameSpeedState ___gameSpeedState)
+    private static bool GetTimerMultiplierForSpeedPrefix(Heart __instance,GameSpeed speed,
+        ref float ___veryFastMultiplier, ref float ___veryVeryfastMultiplier, ref GameSpeedState ___gameSpeedState, ref float __result)
     {
-        ___timerBetweenBeats += Time.deltaTime;
-        if ((double)___timerBetweenBeats <= 0.05000000074505806)
-            return false;
-        ___timerBetweenBeats -= 0.05f;
-        if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Fast)
+        switch (speed)
         {
-            __instance.Beat(speedStep, 0.05f);
+            case GameSpeed.Paused:
+                __result= 0.0f;
+                break;
+            case GameSpeed.Normal:
+                __result=1f;
+                break;
+            case GameSpeed.Fast:
+                __result=speedStep;
+                break;
+            case GameSpeed.VeryFast:
+                __result=___veryFastMultiplier;
+                break;
+            case GameSpeed.VeryVeryFast:
+                __result=___veryVeryfastMultiplier;
+                break;
+            default:
+                NoonUtility.Log("Unknown game speed state: " + ___gameSpeedState.GetEffectiveGameSpeed().ToString());
+                __result=0.0f;
+                break;
         }
-        else if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Normal)
-            __instance.Beat(0.05f, 0.05f);
-        else if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Paused)
-            __instance.Beat(0.0f, 0.05f);
-        else
-            NoonUtility.Log("Unknown game speed state: " + ___gameSpeedState.GetEffectiveGameSpeed().ToString());
-
         return false;
     }
 }

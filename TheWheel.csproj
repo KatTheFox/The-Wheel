@@ -34,7 +34,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="0Harmony">
-          <HintPath>..\..\steam\steamapps\workshop\content\718670\2820486455\dll\0Harmony.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\steam\steamapps\workshop\content\718670\2820486455\dll\0Harmony.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp">
           <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\Assembly-CSharp.dll</HintPath><Private>false</Private>
@@ -55,6 +55,9 @@
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
+        <Reference Include="Unity.InputSystem">
+          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\Unity.InputSystem.dll</HintPath><Private>false</Private>
+        </Reference>
         <Reference Include="UnityEngine">
           <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\UnityEngine.dll</HintPath><Private>false</Private>
         </Reference>
@@ -63,8 +66,11 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="KB10SettingTracker.cs" />
+        <Compile Include="KB1SettingTracker.cs" />
+        <Compile Include="KBNextVerbSettingTracker.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="SettingTracker.cs" />
+        <Compile Include="SpeedSettingTracker.cs" />
         <Compile Include="TheWheel.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
