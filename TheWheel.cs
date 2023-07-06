@@ -4,10 +4,12 @@ using SecretHistories.Fucine;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using SecretHistories.UI;
 using HarmonyLib;
 using SecretHistories.Constants;
+using SecretHistories.Spheres;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -20,11 +22,12 @@ public class TheWheel: MonoBehaviour
     public static string KB1Str= "P";
     public static string KB10Str= "Z";
     public static string KBNextVerb="Slash";
+    public static string KBNextCard = "H";
     public static SpeedSettingTracker tracker;
     public static KB1SettingTracker tracker1;
     public static KB10SettingTracker tracker10;
     public static KBNextVerbSettingTracker trackerNextVerb;
-    
+    public static KBNextCardSettingTracker trackerNextCard;
     
     public void Start() => SceneManager.sceneLoaded += new UnityAction<Scene, LoadSceneMode>(AwakePrefix);
     
@@ -62,8 +65,32 @@ public class TheWheel: MonoBehaviour
                 Watchman.Get<Heart>().Beat(1f, 0.0f);
             
         }
+        if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KBNextCard)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
+        {
+            NoonUtility.Log("TheWheel: Fast forwarding to next card");
+            float nextCardTime=GetNextCardTime();
+            
+                Watchman.Get<Heart>().Beat(nextCardTime - 0.1f, 0.0f);
+                Watchman.Get<Heart>().Beat(0.2f,0.0f);
+               
+        }
     }
 
+    public static float GetNextCardTime()
+    {
+        var elementStacks=Watchman.Get<HornedAxe>(). GetExteriorSpheres().Where((x => x.TokenHeartbeatIntervalMultiplier>0.0f)).SelectMany(x => x.GetTokens()).Select(x=>x.Payload).OfType<ElementStack>();
+        var lowest = float.PositiveInfinity;
+        foreach (var stack in elementStacks)
+        {
+            if(stack.Decays && stack.LifetimeRemaining<lowest && stack.LifetimeRemaining>=0.2f)
+                lowest = stack.LifetimeRemaining;
+        }
+        NoonUtility.Log("TheWheel: Next card time is "+lowest+" seconds");
+        lowest=Math.Min(lowest,GetNextVerbTime());
+        
+        return float.IsPositiveInfinity(lowest)?0.0f:lowest;
+    }
+    
     public static float GetNextVerbTime()
     {
         List<Situation> verbList=Watchman.Get<HornedAxe>().GetRegisteredSituations();
@@ -78,7 +105,7 @@ public class TheWheel: MonoBehaviour
         };
         if(float.IsPositiveInfinity(lowest))
             return 0.0f;
-        NoonUtility.LogWarning("TheWheel: Next verb time is "+lowest+" seconds");
+        NoonUtility.Log("TheWheel: Next verb time is "+lowest+" seconds");
         return lowest;
     }
     public static void Initialise()
@@ -173,6 +200,17 @@ public class TheWheel: MonoBehaviour
                     kbNextVerb.AddSubscriber(trackerNextVerb = new KBNextVerbSettingTracker())
                         ;
                     trackerNextVerb.WhenSettingUpdated(kbNextVerb.CurrentValue);
+                }
+                Setting kbNextCard = Watchman.Get<Compendium>().GetEntityById<Setting>("ffNextCard");
+                if (kbNextCard == null)
+                {
+                    NoonUtility.LogWarning("next card keybind missing");
+                }
+                else
+                {
+                    kbNextCard.AddSubscriber(trackerNextCard = new KBNextCardSettingTracker())
+                        ;
+                    trackerNextCard.WhenSettingUpdated(kbNextCard.CurrentValue);
                 }
             }
             catch (Exception e)
