@@ -9,6 +9,7 @@ using System.Reflection;
 using SecretHistories.UI;
 using HarmonyLib;
 using SecretHistories.Constants;
+using SecretHistories.Infrastructure;
 using SecretHistories.Spheres;
 using UnityEngine;
 using UnityEngine.InputSystem;
