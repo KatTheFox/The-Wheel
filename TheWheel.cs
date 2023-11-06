@@ -33,16 +33,19 @@ public class TheWheel: MonoBehaviour
     
     public void OnDestroy() => SceneManager.sceneLoaded -= new UnityAction<Scene, LoadSceneMode>(AwakePrefix);
 
-    public void Update()
+    public async void Update()
     {
         
         if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KB10Str)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
         {
-            
-            
+
+
             for (int index = 0; index < 10; ++index)
+            {
+                await Settler.AwaitSettled();
                 Watchman.Get<Heart>().Beat(1f, 0.0f);
-            
+            }
+
         }
         if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KBNextVerb)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
         {
@@ -52,8 +55,10 @@ public class TheWheel: MonoBehaviour
                 if (nextVerbTime > 0.0f)
                 {
                     if(nextVerbTime<0.1f){
+                        await Settler.AwaitSettled();
                         Watchman.Get<Heart>().Beat(0.1f,0.0f);
                     } else {
+                        await Settler.AwaitSettled();
                         Watchman.Get<Heart>().Beat(nextVerbTime - 0.1f, 0.0f);
                         Watchman.Get<Heart>().Beat(0.2f,0.0f);
                     }
@@ -62,9 +67,8 @@ public class TheWheel: MonoBehaviour
         }
         if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KB1Str)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
         {
-            
-            
-                Watchman.Get<Heart>().Beat(1f, 0.0f);
+            await Settler.AwaitSettled();
+            Watchman.Get<Heart>().Beat(1f, 0.0f);
             
         }
         if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KBNextCard)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
@@ -73,8 +77,10 @@ public class TheWheel: MonoBehaviour
             var nextCardTime=GetNextCardTime();
             if (!(nextCardTime > 0.0f)) return;
             if(nextCardTime<0.1f){
+                await Settler.AwaitSettled();
                 Watchman.Get<Heart>().Beat(0.1f,0.0f);
             } else {
+                await Settler.AwaitSettled();
                 Watchman.Get<Heart>().Beat(nextCardTime - 0.1f, 0.0f);
                 Watchman.Get<Heart>().Beat(0.2f,0.0f);
             }

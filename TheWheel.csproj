@@ -71,6 +71,7 @@
         <Compile Include="KBNextCardSettingTracker.cs" />
         <Compile Include="KBNextVerbSettingTracker.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Settler.cs" />
         <Compile Include="SpeedSettingTracker.cs" />
         <Compile Include="TheWheel.cs" />
     </ItemGroup>
