@@ -127,7 +127,7 @@ public class TheWheel: MonoBehaviour
             try
             {
                 harmony.Patch(
-                    original: GetMethodInvariant(typeof(Heart), "ProcessBeatCounter"),
+                    original: GetMethodInvariant(typeof(Heart), "GetTimerMultiplierForSpeed"),
                     prefix: new HarmonyMethod(GetMethodInvariant(typeof(TheWheel),
                         (nameof(TheWheel.GetTimerMultiplierForSpeedPrefix)))));
             }catch(Exception e)
