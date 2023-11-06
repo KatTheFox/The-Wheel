@@ -230,21 +230,31 @@ public class TheWheel: MonoBehaviour
         }
     }
 
-    private static bool GetTimerMultiplierForSpeedPrefix(Heart __instance, ref float ___timerBetweenBeats,
-        ref GameSpeedState ___gameSpeedState)
+    private static bool GetTimerMultiplierForSpeedPrefix(Heart __instance,GameSpeed speed,
+        ref float ___veryFastMultiplier, ref float ___veryVeryfastMultiplier, ref GameSpeedState ___gameSpeedState, ref float __result)
     {
-        ___timerBetweenBeats += Time.deltaTime;
-        if ((double) ___timerBetweenBeats <= 0.05000000074505806)
-            return false;
-        ___timerBetweenBeats -= 0.05f;
-        if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Fast)
-            __instance.Beat(speedStep, 0.05f);
-        else if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Normal)
-            __instance.Beat(0.05f, 0.05f);
-        else if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Paused)
-            __instance.Beat(0.0f, 0.05f);
-        else
-            NoonUtility.Log("Unknown game speed state: " + ___gameSpeedState.GetEffectiveGameSpeed().ToString());
+        switch (speed)
+        {
+            case GameSpeed.Paused:
+                __result= 0.0f;
+                break;
+            case GameSpeed.Normal:
+                __result=1f;
+                break;
+            case GameSpeed.Fast:
+                __result=speedStep;
+                break;
+            case GameSpeed.VeryFast:
+                __result=___veryFastMultiplier;
+                break;
+            case GameSpeed.VeryVeryFast:
+                __result=___veryVeryfastMultiplier;
+                break;
+            default:
+                NoonUtility.Log("Unknown game speed state: " + ___gameSpeedState.GetEffectiveGameSpeed().ToString());
+                __result=0.0f;
+                break;
+        }
         return false;
     }
 }
