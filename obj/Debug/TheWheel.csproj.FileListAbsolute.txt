@@ -1,6 +1,0 @@
-/home/katrina/The Wheel/TheWheel/bin/Debug/TheWheel.dll
-/home/katrina/The Wheel/TheWheel/bin/Debug/TheWheel.pdb
-/home/katrina/The Wheel/TheWheel/obj/Debug/TheWheel.csproj.AssemblyReference.cache
-/home/katrina/The Wheel/TheWheel/obj/Debug/TheWheel.csproj.CoreCompileInputs.cache
-/home/katrina/The Wheel/TheWheel/obj/Debug/TheWheel.dll
-/home/katrina/The Wheel/TheWheel/obj/Debug/TheWheel.pdb

@@ -26,43 +26,43 @@
         <PlatformTarget>AnyCPU</PlatformTarget>
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>..\..\.config\unity3d\Weather Factory\Cultist Simulator\mods\The Wheel\dll\</OutputPath>
-    <BaseOutputPath>\home\katrina\.config\unity3d\Weather Factory\Cultist Simulator\mods\The Wheel\dll</BaseOutputPath>
+        <OutputPath>..\..\..\..\.config\unity3d\Weather Factory\Cultist Simulator\mods\The Wheel\dll\</OutputPath>
+        <BaseOutputPath>\home\lily\.config\unity3d\Weather Factory\Cultist Simulator\mods\The Wheel\dll</BaseOutputPath>
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="0Harmony">
-          <HintPath>..\..\steam\steamapps\workshop\content\718670\2820486455\dll\0Harmony.dll</HintPath>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\workshop\content\718670\2625527332\dll\0Harmony.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\Assembly-CSharp.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\Assembly-CSharp.dll</HintPath><Private>false</Private>
         </Reference>
         <Reference Include="SecretHistories.Constants">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Constants.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Constants.dll</HintPath><Private>false</Private>
         </Reference>
         <Reference Include="SecretHistories.Enums">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Enums.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Enums.dll</HintPath><Private>false</Private>
         </Reference>
         <Reference Include="SecretHistories.Interfaces">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Interfaces.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Interfaces.dll</HintPath><Private>false</Private>
         </Reference>
         <Reference Include="SecretHistories.Main">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Main.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\SecretHistories.Main.dll</HintPath><Private>false</Private>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
         <Reference Include="Unity.InputSystem">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\Unity.InputSystem.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\Unity.InputSystem.dll</HintPath><Private>false</Private>
         </Reference>
         <Reference Include="UnityEngine">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\UnityEngine.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\UnityEngine.dll</HintPath><Private>false</Private>
         </Reference>
         <Reference Include="UnityEngine.CoreModule">
-          <HintPath>..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\UnityEngine.CoreModule.dll</HintPath><Private>false</Private>
+          <HintPath>..\..\..\..\.local\share\Steam\steamapps\common\Cultist Simulator\CS_Data\Managed\UnityEngine.CoreModule.dll</HintPath><Private>false</Private>
         </Reference>
     </ItemGroup>
     <ItemGroup>

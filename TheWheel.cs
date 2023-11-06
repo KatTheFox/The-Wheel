@@ -2,7 +2,6 @@ using SecretHistories.Entities;
 using SecretHistories.Enums;
 using SecretHistories.Fucine;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,12 +9,12 @@ using SecretHistories.UI;
 using HarmonyLib;
 using SecretHistories.Constants;
 using SecretHistories.Infrastructure;
-using SecretHistories.Spheres;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+// ReSharper disable InconsistentNaming
 
 public class TheWheel: MonoBehaviour
 {
@@ -47,15 +46,17 @@ public class TheWheel: MonoBehaviour
         }
         if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KBNextVerb)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
         {
-                
-                
-                float timeToFF=GetNextVerbTime();
-                NoonUtility.LogWarning("TheWheel: Fast forwarding "+timeToFF+" seconds");
-                if (timeToFF >= 0.1f)
+            
+                var nextVerbTime=GetNextVerbTime();
+                NoonUtility.LogWarning("TheWheel: Fast forwarding "+nextVerbTime+" seconds");
+                if (nextVerbTime > 0.0f)
                 {
-                    Watchman.Get<Heart>().Beat(timeToFF - 0.1f, 0.0f);
-                    Watchman.Get<Heart>().Beat(0.2f,0.0f);
-                    
+                    if(nextVerbTime<0.1f){
+                        Watchman.Get<Heart>().Beat(0.1f,0.0f);
+                    } else {
+                        Watchman.Get<Heart>().Beat(nextVerbTime - 0.1f, 0.0f);
+                        Watchman.Get<Heart>().Beat(0.2f,0.0f);
+                    }
                 }
 
         }
@@ -69,11 +70,14 @@ public class TheWheel: MonoBehaviour
         if (((ButtonControl)Keyboard.current[(Key) Enum.Parse(typeof (Key), KBNextCard)]).wasPressedThisFrame && !Watchman.Get<LocalNexus>().PlayerInputDisabled())
         {
             NoonUtility.Log("TheWheel: Fast forwarding to next card");
-            float nextCardTime=GetNextCardTime();
-            
+            var nextCardTime=GetNextCardTime();
+            if (!(nextCardTime > 0.0f)) return;
+            if(nextCardTime<0.1f){
+                Watchman.Get<Heart>().Beat(0.1f,0.0f);
+            } else {
                 Watchman.Get<Heart>().Beat(nextCardTime - 0.1f, 0.0f);
                 Watchman.Get<Heart>().Beat(0.2f,0.0f);
-               
+            }
         }
     }
 
@@ -83,12 +87,11 @@ public class TheWheel: MonoBehaviour
         var lowest = float.PositiveInfinity;
         foreach (var stack in elementStacks)
         {
-            if(stack.Decays && stack.LifetimeRemaining<lowest && stack.LifetimeRemaining>=0.2f)
+            if(stack.Decays && stack.LifetimeRemaining<lowest && stack.LifetimeRemaining>0.0f)
                 lowest = stack.LifetimeRemaining;
         }
         NoonUtility.Log("TheWheel: Next card time is "+lowest+" seconds");
         lowest=Math.Min(lowest,GetNextVerbTime());
-        
         return float.IsPositiveInfinity(lowest)?0.0f:lowest;
     }
     
@@ -100,7 +103,7 @@ public class TheWheel: MonoBehaviour
         float lowest=float.PositiveInfinity;
         foreach (Situation verb in verbList)
         {
-            if(verb.TimeRemaining<lowest && verb.TimeRemaining>=0.1f)
+            if(verb.TimeRemaining<lowest && verb.TimeRemaining>0.0f)
                 lowest = verb.TimeRemaining;
             
         };
@@ -118,7 +121,7 @@ public class TheWheel: MonoBehaviour
             try
             {
                 harmony.Patch(
-                    original: GetMethodInvariant(typeof(Heart), "GetTimerMultiplierForSpeed"),
+                    original: GetMethodInvariant(typeof(Heart), "ProcessBeatCounter"),
                     prefix: new HarmonyMethod(GetMethodInvariant(typeof(TheWheel),
                         (nameof(TheWheel.GetTimerMultiplierForSpeedPrefix)))));
             }catch(Exception e)
@@ -221,31 +224,21 @@ public class TheWheel: MonoBehaviour
         }
     }
 
-    private static bool GetTimerMultiplierForSpeedPrefix(Heart __instance,GameSpeed speed,
-        ref float ___veryFastMultiplier, ref float ___veryVeryfastMultiplier, ref GameSpeedState ___gameSpeedState, ref float __result)
+    private static bool GetTimerMultiplierForSpeedPrefix(Heart __instance, ref float ___timerBetweenBeats,
+        ref GameSpeedState ___gameSpeedState)
     {
-        switch (speed)
-        {
-            case GameSpeed.Paused:
-                __result= 0.0f;
-                break;
-            case GameSpeed.Normal:
-                __result=1f;
-                break;
-            case GameSpeed.Fast:
-                __result=speedStep;
-                break;
-            case GameSpeed.VeryFast:
-                __result=___veryFastMultiplier;
-                break;
-            case GameSpeed.VeryVeryFast:
-                __result=___veryVeryfastMultiplier;
-                break;
-            default:
-                NoonUtility.Log("Unknown game speed state: " + ___gameSpeedState.GetEffectiveGameSpeed().ToString());
-                __result=0.0f;
-                break;
-        }
+        ___timerBetweenBeats += Time.deltaTime;
+        if ((double) ___timerBetweenBeats <= 0.05000000074505806)
+            return false;
+        ___timerBetweenBeats -= 0.05f;
+        if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Fast)
+            __instance.Beat(speedStep, 0.05f);
+        else if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Normal)
+            __instance.Beat(0.05f, 0.05f);
+        else if (___gameSpeedState.GetEffectiveGameSpeed() == GameSpeed.Paused)
+            __instance.Beat(0.0f, 0.05f);
+        else
+            NoonUtility.Log("Unknown game speed state: " + ___gameSpeedState.GetEffectiveGameSpeed().ToString());
         return false;
     }
 }
