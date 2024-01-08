@@ -23,3 +23,7 @@ Unsubscribe from it on the Steam Workshop, or (for non-Steam users) delete the "
 ## Disclaimers
 
 Do not contact Weather Factory with bugs resulting from the use of this mod. As the game updates, expect potential breakages. I am not affiliated with Weather Factory in any way.
+
+The Wheel is unofficial content based on Cultist Simulator by Weather Factory Ltd. You can find out more and support Cultist Simulator at [www.weatherfactory.biz](https://www.weatherfactory.biz).
+
+<img src="https://weatherfactory.biz/wp-content/uploads/2022/11/sixth-history-logo-text-black.png" width="120" /> 
