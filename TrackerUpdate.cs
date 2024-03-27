@@ -1,0 +1,1 @@
+public delegate void TrackerUpdate<T>(SettingTracker<T> tracker);
